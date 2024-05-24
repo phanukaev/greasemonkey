@@ -1,3 +1,10 @@
+// ==UserScript==
+// @name Playlist Info Download
+// @include https://music.youtube.com/*
+// @grant none
+// ==/UserScript==
+
+
 const get_playlist_data = () => {
   const extract_data = (d) => {
     let retval = {};
