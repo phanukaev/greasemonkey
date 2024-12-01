@@ -1,7 +1,8 @@
 // ==UserScript==
-// @name Playlist Info Download
-// @include https://music.youtube.com/*
-// @grant none
+// @name       Playlist Info Download
+// @include    https://music.youtube.com/*
+// @grant      none
+// @version    1.1
 // ==/UserScript==
 
 
@@ -26,28 +27,36 @@ const get_playlist_data = () => {
 }
 
 const get_playlist_title = () =>
-      document.querySelector('.metadata > h2').textContent.trim();
+      document
+      .querySelector('h2.ytmusic-responsive-header-renderer')
+      .textContent
+      .trim()
 
-download_button = document.createElement('a');
-'.detail-page-menu > div:nth-child(1)'
-download_button.setAttribute(
-    'style',
-    `font-size: 12pt; 
-    text-align: center; 
-    color: black;
-    vertical-align: bottom;
-    background: white;
-    border-radius: 20px;
-    padding: 8px 10px 0 10px;`);
+const run_downloader = () => {
+    let el = document.createElement('a');
+    el.download = get_playlist_title() + '.json';
+    el.href =
+        'data:text/plain;charset=utf-8,'
+        + encodeURIComponent(get_playlist_data());
+    el.style.display = 'none';
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+}
+    
+let db_wrapper = document.createElement('div')
+db_wrapper.style.display = 'flex';
+db_wrapper.style.justifyContent = 'center';
+db_wrapper.style.marginTop = '3ex';
 
-
+let download_button = document.createElement('button');
 download_button.textContent = 'Download Info';
+download_button.addEventListener('click', (event) => {
+    run_downloader();
+});
 
-download_button.setAttribute (
-    'href',
-    'data:text/plain;charset=utf-8,'
-        + encodeURIComponent(get_playlist_data()));
+db_wrapper.appendChild(download_button);
 
-download_button.setAttribute('download', get_playlist_title() + '.json' );
-
-document.querySelector('#top-level-buttons').appendChild(download_button);
+document
+    .querySelector('ytmusic-responsive-header-renderer')
+    .appendChild(db_wrapper);
